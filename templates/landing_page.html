@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SmartNinja WebApp</title>
-</head>
-<body>
-    <h1>Hello {{ username }}</h1>
-    <form method="post" action="/result">
-        <input name="some_text">
-        <button type="submit">Publish</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}SmartNinja WebApp - Landing page{% endblock title %}
+
+{% block main_container %}
+<h1>Hello {{ username }}</h1>
+<form method="post" action="/result">
+    <input name="some_text">
+    <button type="submit">Publish</button>
+</form>
+{% endblock main_container %}
