@@ -4,6 +4,7 @@ threadsafe: yes
 
 skip_files:
 - ^venv/*.*
+
 handlers:
 - url: .*
   script: main.app

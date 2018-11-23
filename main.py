@@ -4,11 +4,12 @@ import webapp2
 
 template_dir = os.path.join(
     os.path.dirname(__file__),
-    "templates")
-
+    "templates"
+)
 jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(template_dir),
-    autoescape=False)
+    autoescape=False
+)
 
 class BaseHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -29,15 +30,17 @@ class BaseHandler(webapp2.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        params = {"username": "Nerea :) <3"}
+        params = {"username": "Ninja"}
         self.render_template("landing_page.html", params)
 
 class ResultHandler(BaseHandler):
     def post(self):
-        params = {"input_text": self.request.get("some_text")}
+        params = {
+            "input_text": self.request.get("some_text")
+        }
         self.render_template("result_template.html", params)
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', MainHandler),
-    webapp2.Route('/result', ResultHandler)
+    webapp2.Route('/result', ResultHandler),
 ], debug=True)
