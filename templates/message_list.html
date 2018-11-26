@@ -7,7 +7,7 @@
 
 <table class="table table-striped">
   <thead>
-    <tr class="thead-dark">
+    <tr class="table-primary">
       <th scope="col">#</th>
       <th scope="col">Message</th>
     </tr>
@@ -16,7 +16,7 @@
     {% for message in message_list %}
     <tr>
       <th scope="row">{{ loop.index }}</th>
-      <td>{{ message }}</td>
+      <td>{{ message.message_text }}</td>
     </tr>
     {% endfor %}
   </tbody>

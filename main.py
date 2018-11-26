@@ -1,6 +1,7 @@
 import os
 import jinja2
 import webapp2
+from models import Message
 
 template_dir = os.path.join(
     os.path.dirname(__file__),
@@ -36,16 +37,19 @@ class MainHandler(BaseHandler):
         }
         self.render_template("landing_page.html", params)
     def post(self):
+        input_text = self.request.get("some_text")
+        msg = Message(message_text=input_text)
+        msg.put()
         params = {
             "username": "Ninja",
-            "input_text": self.request.get("some_text"),
+            "input_text": input_text,
         }
         self.render_template("landing_page.html", params)
 
 class ListHandler(BaseHandler):
     def get(self):
-        message_list = ["sdadf", "dsfsadfdsaf", "ppoiuhgh", "2343453"]
-        params = {"message_list": message_list}
+        messages = Message.query().fetch()
+        params = {"message_list": messages}
         self.render_template("message_list.html", params)
 
 
