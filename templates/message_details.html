@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}SmartNinja WebApp - Message Details {% endblock title %}
+
+{% block main_container %}
+<ul>
+    <li>
+        ID: {{ message.key.id() }}
+    </li>
+    <li>
+        Message: {{ message.message_text }}
+    </li>
+    <li>
+        Created: {{ message.created.strftime("%B %d, %Y") }}
+    </li>
+</ul>
+{% endblock main_container %}

@@ -52,8 +52,15 @@ class ListHandler(BaseHandler):
         params = {"message_list": messages}
         self.render_template("message_list.html", params)
 
+class MessageDetailsHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        self.render_template("message_details.html", params)
+
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', MainHandler),
     webapp2.Route('/list', ListHandler),
+    webapp2.Route('/message/<message_id:\d+>', MessageDetailsHandler),
 ], debug=True)

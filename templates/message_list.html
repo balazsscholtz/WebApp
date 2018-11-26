@@ -17,7 +17,9 @@
     {% for message in message_list %}
     <tr>
       <th scope="row">{{ loop.index }}</th>
-      <td>{{ message.message_text }}</td>
+      <td>
+        <a href="/message/{{message.key.id()}}">{{ message.message_text }}</a>
+      </td>
       <td>
         {% if message.created %}
         {{ message.created.strftime("%B %d, %Y") }}
