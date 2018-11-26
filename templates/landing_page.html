@@ -4,8 +4,13 @@
 
 {% block main_container %}
 <h1>Hello {{ username }}</h1>
-<form method="post" action="/result">
+<form method="post" action="/">
     <input name="some_text">
     <button type="submit">Publish</button>
 </form>
+
+{% if input_text %}
+<h2>Your message: {{ input_text }}</h2>
+{% endif %}
+
 {% endblock main_container %}

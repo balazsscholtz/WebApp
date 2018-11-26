@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}SmartNinja WebApp - Message List{% endblock title %}
+
+{% block main_container %}
+<h1>Message List</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr class="thead-dark">
+      <th scope="col">#</th>
+      <th scope="col">Message</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for message in message_list %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ message }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock main_container %}
