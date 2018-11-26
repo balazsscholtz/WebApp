@@ -8,8 +8,9 @@
 <table class="table table-striped">
   <thead>
     <tr class="table-primary">
-      <th scope="col">#</th>
+      <th scope="col">ˇ</th>
       <th scope="col">Message</th>
+      <th scope="col">Created</th>
     </tr>
   </thead>
   <tbody>
@@ -17,6 +18,11 @@
     <tr>
       <th scope="row">{{ loop.index }}</th>
       <td>{{ message.message_text }}</td>
+      <td>
+        {% if message.created %}
+        {{ message.created.strftime("%B %d, %Y") }}
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </tbody>

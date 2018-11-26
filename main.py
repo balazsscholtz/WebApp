@@ -32,7 +32,7 @@ class BaseHandler(webapp2.RequestHandler):
 class MainHandler(BaseHandler):
     def get(self):
         params = {
-            "username": "Ninja",
+            "username": "Nerea Novio!",
             "input_text": None,
         }
         self.render_template("landing_page.html", params)
@@ -41,7 +41,7 @@ class MainHandler(BaseHandler):
         msg = Message(message_text=input_text)
         msg.put()
         params = {
-            "username": "Ninja",
+            "username": "Nerea ella es hermosa",
             "input_text": input_text,
         }
         self.render_template("landing_page.html", params)
