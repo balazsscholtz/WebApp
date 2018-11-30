@@ -1,17 +1,91 @@
 {% extends "base.html" %}
 
-{% block title %}SmartNinja WebApp - Message Details {% endblock title %}
+{% block title %}SmartNinja WebApp - Message Details{% endblock title %}
 
 {% block main_container %}
+{% if message %}
 <ul>
     <li>
         ID: {{ message.key.id() }}
     </li>
     <li>
-        Message: {{ message.message_text }}
+        Message: {{ message.message_text | safe }}
     </li>
     <li>
-        Created: {{ message.created.strftime("%B %d, %Y") }}
+        Created: {{ message.created.strftime("%Y. %B %d. %H:%M:%S") }}
+    </li>
+    <li>
+        Modified: {{ message.modified.strftime("%Y. %B %d. %H:%M:%S") }}
     </li>
 </ul>
+<!--<a href="/message/{{ message.key.id() }}/edit">Edit</a>-->
+<!--<br>-->
+<!--<a href="/message/{{ message.key.id() }}/delete">Delete</a>-->
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+    Edit
+</button>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal">
+    Delete
+</button>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Do you want to delete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Message: {{ message.message_text | safe }}
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="/message/{{ message.key.id() }}/delete">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">NO</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <form method="post" action="/message/{{ message.key.id() }}/edit">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit message:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>
+                            ID: {{ message.key.id() }}
+                        </li>
+                        <li>
+                            Message: <input name="message_text" value="{{ message.message_text }}">
+                        </li>
+                        <li>
+                            Created: {{ message.created.strftime("%B %d, %Y") }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secundary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% else %}
+<h1>Message not found!</h1>
+{% endif %}
 {% endblock main_container %}

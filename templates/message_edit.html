@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}SmartNinja WebApp - Message Details {% endblock title %}
+
+{% block main_container %}
+{% if message%}
+<form method="post" action="/message/{{ message.key.id() }}/edit">
+    <ul>
+        <li>
+            ID: {{ message.key.id() }}
+        </li>
+        <li>
+            Message: <input name="message_text" value="{{ message.message_text }}">
+        </li>
+        <li>
+            Created: {{ message.created.strftime("%B %d, %Y") }}
+        </li>
+    </ul>
+<button type="submit">Save</button>
+</form>
+{% else %}
+<h1>Message not found!</h1>
+{% endif %}
+{% endblock main_container %}

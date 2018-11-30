@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}SmartNinja WebApp - Message Delete {% endblock title %}
+
+{% block main_container %}
+{% if message%}
+<form method="post" action="/message/{{ message.key.id() }}/delete">
+    <h1>Are U Sure</h1>
+    <a class="btn btn-primary" href="/message/{{ message.key.id() }}" role="button">No</a>
+    <button type="submit" class="btn btn-danger">Yes</button>
+</form>
+{% else %}
+<h1>Message not found!</h1>
+{% endif %}
+{% endblock main_container %}
