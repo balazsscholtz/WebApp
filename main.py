@@ -4,6 +4,7 @@ import webapp2
 import datetime
 from models import Message
 from google.appengine.ext import ndb
+from google.appengine.api import users
 
 
 template_dir = os.path.join(
@@ -34,19 +35,28 @@ class BaseHandler(webapp2.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        params = {
-            "username": "Ninja",
-            "input_text": None,
-        }
+        user = users.get_current_user()
+        params = {"user": user}
+        if user:
+            logout_url = users.create_logout_url('/')
+            params["logout_url"] = logout_url
+        else:
+            login_url = users.create_login_url('/')
+            params["login_url"] = login_url
         self.render_template("landing_page.html", params)
     def post(self):
-        input_text = self.request.get("some_text")
-        msg = Message(message_text=input_text)
-        msg.put()
-        params = {
-            "username": "Ninja",
-            "input_text": input_text,
-        }
+        user = users.get_current_user()
+        params = {"user": user}
+        if user:
+            logout_url = users.create_logout_url('/')
+            params["logout_url"] = logout_url
+            input_text = self.request.get("some_text")
+            msg = Message(message_text=input_text, user=user.user_id())
+            msg.put()
+            params["input_text"] = input_text
+        else:
+            login_url = users.create_login_url('/')
+            params["login_url"] = login_url
         self.render_template("landing_page.html", params)
 
 class ListHandler(BaseHandler):

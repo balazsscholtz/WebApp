@@ -11,6 +11,7 @@
       <th scope="col">ˇ</th>
       <th scope="col">Message</th>
       <th scope="col">Created</th>
+      <th scope="col">User</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,9 @@
         {% if message.created %}
         {{ message.created.strftime("%B %d, %Y") }}
         {% endif %}
+      </td>
+      <td>
+        {{ message.user }}
       </td>
     </tr>
     {% endfor %}

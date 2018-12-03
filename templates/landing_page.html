@@ -3,14 +3,20 @@
 {% block title %}SmartNinja WebApp - Landing page{% endblock title %}
 
 {% block main_container %}
-<h1>Buenas tardes {{ username }}</h1>
+{% if user %}
+<h1>Hello {{ user.nickname() }}!</h1>
 <form method="post" action="/">
     <input name="some_text">
     <button type="submit">Publish</button>
 </form>
+<a type="button" class="btn btn-primary" href="{{ logout_url }}">LogOut</a>
 
 {% if input_text %}
 <h2>Your message: {{ input_text }}</h2>
 {% endif %}
 
+{% else %}
+<h1>Please log in!!!</h1>
+<a type="button" class="btn btn-danger" href="{{ login_url }}">Login</a>
+{% endif %}
 {% endblock main_container %}
