@@ -12,16 +12,16 @@ indexes:
 - kind: Message
   properties:
   - name: deleted
-  - name: user
-  - name: created
-
-- kind: Message
-  properties:
-  - name: deleted
   - name: created
 
 - kind: Message
   properties:
   - name: deleted
   - name: message_text
+  - name: created
+
+- kind: Message
+  properties:
+  - name: deleted
+  - name: user
   - name: created

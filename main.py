@@ -2,6 +2,7 @@ import os
 import jinja2
 import webapp2
 import datetime
+import json
 from models import Message
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -74,7 +75,7 @@ class ListHandler(BaseHandler):
             ).order(Message.created).fetch()
             params["message_list"] = messages
         else:
-            login_url = users.create_login_url('/')
+            login_url = users.create_login_url('/list')
             params["login_url"] = login_url
         self.render_template("message_list.html", params)
 
@@ -111,15 +112,34 @@ class MessageDeleteHandler(BaseHandler):
 
 class SearchHandler(BaseHandler):
     def post(self):
-        search_text = self.request.get("search_text")
-        messages = Message.query(
-            ndb.AND(
-                Message.deleted==False,
-                Message.message_text==search_text
-            )
-        ).order(Message.created).fetch()
-        params = {"message_list": messages}
-        self.render_template("message_list.html", params)
+        user =users.get_current_user()
+        if user:
+            search_text = self.request.get("search_text")
+            messages = Message.query(
+                ndb.AND(
+                    Message.deleted == False,
+                    Message.message_text == search_text,
+                    Message.user == user.user_id(),
+                )
+            ).order(Message.created).fetch()
+            params = {"message_list": messages, 'user': user}
+            self.render_template("message_list.html", params)
+        else:
+            self.redirect("/list")
+
+class APIHandler(webapp2.RequestHandler):
+    def get(self):
+        messages = Message.query()
+        message2json = {"api_version": "1,0", "messages": []}
+        for message in messages:
+            m = {}
+            m["text"] = message.message_text
+            m["create_date"] = message.created.strftime("%Y. %B %d. %H:%M:%S")
+            m["last_midified_date"] = message.modified.strftime("%Y. %B %d. %H:%M:%S")
+            m["is_deleted"] = message.deleted
+            m["user_id"] = message.user
+            message2json["messages"].append(m)
+        return self.response.write(json.dumps(message2json, indent=4))
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', MainHandler),
@@ -128,4 +148,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/message/<message_id:\d+>/edit', MessageEditHandler),
     webapp2.Route('/message/<message_id:\d+>/delete', MessageDeleteHandler),
     webapp2.Route('/search', SearchHandler),
+    webapp2.Route('/api', APIHandler)
 ], debug=True)
