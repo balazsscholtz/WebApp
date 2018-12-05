@@ -36,7 +36,7 @@ class BaseHandler(webapp2.RequestHandler):
 class MainHandler(BaseHandler):
     def get(self):
         user = users.get_current_user()
-        params = {"user": user}
+        params = {"user": user,}
         if user:
             logout_url = users.create_logout_url('/')
             params["logout_url"] = logout_url
@@ -46,7 +46,7 @@ class MainHandler(BaseHandler):
         self.render_template("landing_page.html", params)
     def post(self):
         user = users.get_current_user()
-        params = {"user": user}
+        params = {"user": user,}
         if user:
             logout_url = users.create_logout_url('/')
             params["logout_url"] = logout_url
@@ -61,8 +61,21 @@ class MainHandler(BaseHandler):
 
 class ListHandler(BaseHandler):
     def get(self):
-        messages = Message.query(Message.deleted==False).order(Message.created).fetch()
-        params = {"message_list": messages}
+        user = users.get_current_user()
+        params = {"user": user,}
+        if user:
+            logout_url = users.create_logout_url('/')
+            params["logout_url"] = logout_url
+            messages = Message.query(
+                ndb.AND(
+                    Message.deleted == False,
+                    Message.user == user.user_id(),
+                )
+            ).order(Message.created).fetch()
+            params["message_list"] = messages
+        else:
+            login_url = users.create_login_url('/')
+            params["login_url"] = login_url
         self.render_template("message_list.html", params)
 
 class MessageDetailsHandler(BaseHandler):
@@ -99,8 +112,12 @@ class MessageDeleteHandler(BaseHandler):
 class SearchHandler(BaseHandler):
     def post(self):
         search_text = self.request.get("search_text")
-        messages = Message.query(ndb.AND(
-                    Message.deleted==False, Message.message_text==search_text)).order(Message.created).fetch()
+        messages = Message.query(
+            ndb.AND(
+                Message.deleted==False,
+                Message.message_text==search_text
+            )
+        ).order(Message.created).fetch()
         params = {"message_list": messages}
         self.render_template("message_list.html", params)
 
@@ -110,5 +127,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/message/<message_id:\d+>', MessageDetailsHandler),
     webapp2.Route('/message/<message_id:\d+>/edit', MessageEditHandler),
     webapp2.Route('/message/<message_id:\d+>/delete', MessageDeleteHandler),
-    webapp2.Route('/search', SearchHandler)
+    webapp2.Route('/search', SearchHandler),
 ], debug=True)

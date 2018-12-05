@@ -3,6 +3,7 @@
 {% block title %}SmartNinja WebApp - Message List{% endblock title %}
 
 {% block main_container %}
+{% if user %}
 <h1>Message List</h1>
 
 <table class="table table-striped">
@@ -33,5 +34,10 @@
     {% endfor %}
   </tbody>
 </table>
+<a type="button" class="btn btn-primary" href="{{ logout_url }}">LogOut</a>
 
+{% else %}
+<h1>Please log in!!!</h1>
+<a type="button" class="btn btn-danger" href="{{ login_url }}">Login</a>
+{% endif %}
 {% endblock main_container %}
