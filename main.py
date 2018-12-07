@@ -3,6 +3,7 @@ import jinja2
 import webapp2
 import datetime
 import json
+import re
 from models import Message
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -104,7 +105,6 @@ class MessageDeleteHandler(BaseHandler):
         self.render_template("message_delete.html", params)
     def post(self, message_id):
         message = Message.get_by_id(int(message_id))
-        #message.key.delete()
         message.modified = datetime.datetime.now()
         message.deleted = True
         message.put()
@@ -118,14 +118,19 @@ class SearchHandler(BaseHandler):
             messages = Message.query(
                 ndb.AND(
                     Message.deleted == False,
-                    Message.message_text == search_text,
                     Message.user == user.user_id(),
                 )
             ).order(Message.created).fetch()
-            params = {"message_list": messages, 'user': user}
+            filtered_message = []
+            search_pattern = r".*"+search_text+r".*"
+            for message in messages:
+                regex = re.match(search_pattern, message.message_text)
+                if regex:
+                    filtered_message.append(message)
+            params = {"message_list": filtered_message, 'user': user}
             self.render_template("message_list.html", params)
         else:
-            self.redirect("/list")
+            self.redirect("/")
 
 class APIHandler(webapp2.RequestHandler):
     def get(self):
